@@ -13,6 +13,8 @@
     "test:ci": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "eslint": "ng lint",
     "eslint:fix": "ng lint --fix",
+    "stylelint": "stylelint \"**/*.scss\"",
+    "stylelint:fix": "npm run stylelint -- --fix",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "prepare": "husky"
@@ -23,6 +25,7 @@
       "prettier --write"
     ],
     "*.scss": [
+      "stylelint --fix",
       "prettier --write"
     ]
   },
@@ -54,6 +57,9 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "lint-staged": "^16.1.5",
     "prettier": "3.6.2",
+    "stylelint": "^16.23.1",
+    "stylelint-config-standard": "^39.0.0",
+    "stylelint-config-standard-scss": "^15.0.1",
     "typescript": "~5.8.2",
     "typescript-eslint": "8.34.1"
   }
