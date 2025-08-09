@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FilePicker } from './file-picker';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('FilePicker', () => {
   let component: FilePicker;
@@ -9,6 +11,11 @@ describe('FilePicker', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FilePicker],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FilePicker);
