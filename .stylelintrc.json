@@ -1,10 +1,11 @@
 {
   "extends": ["stylelint-config-standard-scss"],
   "rules": {
+    "at-rule-no-unknown": null,
     "scss/at-rule-no-unknown": [
       true,
       {
-        "ignoreAtRules": ["tailwind"]
+        "ignoreAtRules": ["plugin"]
       }
     ],
     "selector-class-pattern": "^[a-z][a-z0-9_-]+$"
