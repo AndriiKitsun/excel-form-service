@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ExcelService } from './excel-service';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('ExcelService', () => {
   let service: ExcelService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()],
+    });
+
     service = TestBed.inject(ExcelService);
   });
 
