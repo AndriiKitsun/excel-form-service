@@ -20,6 +20,9 @@ describe('FilePicker', () => {
 
     fixture = TestBed.createComponent(FilePicker);
     component = fixture.componentInstance;
+
+    fixture.componentRef.setInput('acceptedTypes', 'xlsx');
+
     fixture.detectChanges();
   });
 

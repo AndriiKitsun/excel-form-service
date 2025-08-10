@@ -1,0 +1,23 @@
+<div class="card flex justify-between">
+  <p-fileupload
+    #fu
+    mode="basic"
+    chooseLabel="Choose"
+    chooseIcon="pi pi-upload"
+    [accept]="acceptedTypes()"
+    name="file"
+    [customUpload]="true"
+    (uploadHandler)="emitFile($event)"
+  />
+
+  <div class="flex gap-2">
+    <p-button
+      label="Clear"
+      severity="warn"
+      icon="pi pi-trash"
+      (onClick)="clearFile(fu)"
+    />
+
+    <p-button label="Upload" (onClick)="uploadFile(fu)" severity="secondary" />
+  </div>
+</div>
