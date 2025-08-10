@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
+import { AppService } from './services/app-service/app-service';
+import { GroupForm } from './components/group-form/group-form';
 import { RouterOutlet } from '@angular/router';
 import { FilePicker } from './components/file-picker/file-picker';
-import { GroupForm } from './components/group-form/group-form';
-import { AppService } from './services/app-service/app-service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FilePicker, GroupForm],
+  imports: [GroupForm, RouterOutlet, FilePicker],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

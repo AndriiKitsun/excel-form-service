@@ -16,7 +16,7 @@ export class FilePicker {
   clearFile(fileUploader: FileUpload): void {
     fileUploader.clear();
 
-    this.appService.selectedFile.set(null);
+    this.appService.setFile(null);
   }
 
   uploadFile(fileUploader: FileUpload): void {
@@ -28,6 +28,6 @@ export class FilePicker {
   }
 
   emitFile(event: FileUploadHandlerEvent): void {
-    this.appService.selectedFile.set(event.files[0]);
+    this.appService.setFile(event.files[0]);
   }
 }

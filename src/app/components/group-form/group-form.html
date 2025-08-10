@@ -1,3 +1,49 @@
-<div class="card">
-  <p>Available sheets:</p>
+<div class="card flex justify-between">
+  <p-select-button
+    unselectable
+    [options]="sheetNames()"
+    (onChange)="selectSheet($event, tableHeaderSelect, tableRowSelect)"
+  />
+
+  <div class="flex items-center gap-2">
+    <p-select
+      #tableHeaderSelect
+      [options]="tableHeaderOptions()"
+      placeholder="Group by"
+      class="w-full md:w-40"
+      [disabled]="!view"
+      (onChange)="groupView($event)"
+    />
+
+    <p-select
+      #tableRowSelect
+      [options]="tableRowOptions()"
+      placeholder="Select row"
+      class="w-full md:w-40"
+      [disabled]="!selectedColumnId()"
+      (onChange)="selectRow($event)"
+    />
+
+    <p-button label="Add new row" severity="secondary" [disabled]="!view" />
+  </div>
 </div>
+
+@if (selectedRow) {
+  <div class="card flex flex-col gap-2">
+    @for (cell of tableHeadersMap | keyvalue: null; track cell.key) {
+      <p-floatlabel variant="in">
+        <textarea
+          pTextarea
+          [id]="cell.key"
+          [(ngModel)]="selectedRowS()[cell.key]"
+          rows="1"
+          autoResize
+          [ngClass]="{ 'p-filled': !!selectedRowS()[cell.key] }"
+          class="w-full"
+        ></textarea>
+
+        <label [for]="cell.key">{{ tableHeadersMap.get(cell.key) }}</label>
+      </p-floatlabel>
+    }
+  </div>
+}
