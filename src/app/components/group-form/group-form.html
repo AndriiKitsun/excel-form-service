@@ -45,5 +45,16 @@
         <label [for]="cell.key">{{ tableHeadersMap.get(cell.key) }}</label>
       </p-floatlabel>
     }
+
+    <div class="flex flex-row justify-center">
+      <p-button
+        label="Save file"
+        icon="pi pi-save"
+        outlined
+        (onClick)="saveFile($event)"
+      />
+    </div>
   </div>
 }
+
+<p-confirm-dialog />

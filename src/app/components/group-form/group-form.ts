@@ -15,6 +15,8 @@ import { Select } from 'primeng/select';
 import { KeyValuePipe, NgClass } from '@angular/common';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Textarea } from 'primeng/textarea';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-group-form',
@@ -27,7 +29,9 @@ import { Textarea } from 'primeng/textarea';
     FloatLabel,
     Textarea,
     NgClass,
+    ConfirmDialog,
   ],
+  providers: [ConfirmationService],
   templateUrl: './group-form.html',
 })
 export class GroupForm implements OnInit {
@@ -37,6 +41,7 @@ export class GroupForm implements OnInit {
   tableRowOptions = signal<(string | number)[]>([]);
 
   workBook!: WorkBook;
+  sheetName!: string;
   tableHeadersMap = new Map<string, string | number>();
   view!: SheetJsonViewWithAHeader[];
   selectedRow?: SheetJsonViewWithAHeader;
@@ -45,6 +50,7 @@ export class GroupForm implements OnInit {
 
   private readonly excelService = inject(ExcelService);
   private readonly appService = inject(AppService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   ngOnInit(): void {
     void this.parseFile();
@@ -58,23 +64,52 @@ export class GroupForm implements OnInit {
     this.sheetNames.set(this.workBook.SheetNames);
   }
 
+  saveFile(event: Event): void {
+    this.confirmationService.confirm({
+      target: event.target!,
+      message: 'Are you sure that you want to proceed?',
+      header: 'Confirmation',
+      closable: true,
+      closeOnEscape: true,
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Save',
+      },
+      accept: () => {
+        this.workBook.Sheets[this.sheetName] = utils.json_to_sheet(this.view);
+
+        this.excelService.saveFile(
+          this.workBook,
+          this.appService.selectedFile()!.name,
+        );
+      },
+    });
+  }
+
   selectSheet(
     event: SelectButtonChangeTypedEvent,
     tableHeaderSelect: Select,
     tableRowSelect: Select,
   ): void {
-    if (!event.value) {
+    const sheetName = event.value;
+
+    if (!sheetName) {
       return;
     }
 
     const parsedView = utils.sheet_to_json<SheetJsonViewWithAHeader>(
-      this.workBook.Sheets[event.value],
+      this.workBook.Sheets[sheetName],
       {
         header: 'A',
       },
     );
     const headersMap = new Map<string, string | number>();
-    const headers = Object.entries(parsedView.shift()!).map(([key, value]) => {
+    const headers = Object.entries(parsedView[0]).map(([key, value]) => {
       headersMap.set(key, value);
 
       return {
@@ -91,6 +126,7 @@ export class GroupForm implements OnInit {
     tableRowSelect.clear();
     this.selectedRow = undefined;
 
+    this.sheetName = sheetName;
     this.tableHeaderOptions.set(headers);
     this.tableHeadersMap = headersMap;
     this.view = parsedView;
