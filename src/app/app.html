@@ -1,3 +1,9 @@
-<app-file-picker />
+<app-file-picker
+  acceptedTypes="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+/>
+
+@if (appService.selectedFile()) {
+  <app-group-form />
+}
 
 <router-outlet />
