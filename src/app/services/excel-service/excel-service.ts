@@ -13,7 +13,8 @@ export class ExcelService {
 
   saveFile(workBook: WorkBook, fileName: string): unknown {
     const extIdx = fileName.lastIndexOf('.');
-    const updatedFileName = `${fileName.slice(0, extIdx)}_updated${fileName.slice(extIdx)}`;
+    const prefix = new Date().toJSON();
+    const updatedFileName = `${fileName.slice(0, extIdx)}_${prefix}${fileName.slice(extIdx)}`;
 
     return writeFile(workBook, updatedFileName);
   }

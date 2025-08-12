@@ -17,14 +17,20 @@
 
     <p-select
       #tableRowSelect
-      [options]="tableRowOptions()"
+      [options]="view"
+      [optionLabel]="this.selectedColumnId()"
       placeholder="Select row"
-      class="w-full md:w-40"
+      class="h-full w-full md:w-40"
       [disabled]="!selectedColumnId()"
       (onChange)="selectRow($event)"
     />
 
-    <p-button label="Add new row" severity="secondary" [disabled]="!view" />
+    <p-button
+      [disabled]="!selectedColumnId()"
+      label="Add new row"
+      severity="secondary"
+      (onClick)="addNewRow(tableRowSelect)"
+    />
   </div>
 </div>
 
@@ -35,10 +41,10 @@
         <textarea
           pTextarea
           [id]="cell.key"
-          [(ngModel)]="selectedRowS()[cell.key]"
+          [(ngModel)]="selectedRow[cell.key]"
           rows="1"
           autoResize
-          [ngClass]="{ 'p-filled': !!selectedRowS()[cell.key] }"
+          [ngClass]="{ 'p-filled': !!selectedRow[cell.key] }"
           class="w-full"
         ></textarea>
 

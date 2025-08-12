@@ -38,15 +38,12 @@ export class GroupForm implements OnInit {
   sheetNames = signal<string[]>([]);
   tableHeaderOptions = signal<SelectOption[]>([]);
   selectedColumnId = signal<string>('');
-  tableRowOptions = signal<(string | number)[]>([]);
 
   workBook!: WorkBook;
   sheetName!: string;
   tableHeadersMap = new Map<string, string | number>();
   view!: SheetJsonViewWithAHeader[];
   selectedRow?: SheetJsonViewWithAHeader;
-
-  selectedRowS = signal<SheetJsonViewWithAHeader>({ __rowNum__: 0 });
 
   private readonly excelService = inject(ExcelService);
   private readonly appService = inject(AppService);
@@ -139,13 +136,10 @@ export class GroupForm implements OnInit {
       return;
     }
 
-    const groupedValues = this.view.map((row) => row[columnId]).filter(Boolean);
-
     this.selectedColumnId.set(columnId);
-    this.tableRowOptions.set(groupedValues);
   }
 
-  selectRow(event: SelectChangeTypedEvent<string | number>): void {
+  selectRow(event: SelectChangeTypedEvent<SheetJsonViewWithAHeader>): void {
     const rowValue = event.value;
 
     if (!rowValue) {
@@ -153,12 +147,22 @@ export class GroupForm implements OnInit {
     }
 
     const selectedRow = this.view.find(
-      (row) => row[this.selectedColumnId()] === rowValue,
+      (row) => row.__rowNum__ === rowValue.__rowNum__,
     );
 
     if (selectedRow) {
       this.selectedRow = selectedRow;
-      this.selectedRowS.set(selectedRow);
     }
+  }
+
+  addNewRow(tableRowSelect: Select): void {
+    const newRow: SheetJsonViewWithAHeader = {
+      [this.selectedColumnId()]: 'Empty',
+      __rowNum__: this.view.length,
+    };
+
+    this.view.push(newRow);
+    this.selectedRow = newRow;
+    tableRowSelect.updateModel(newRow);
   }
 }
