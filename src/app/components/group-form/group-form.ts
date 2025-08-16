@@ -16,7 +16,8 @@ import { KeyValuePipe, NgClass } from '@angular/common';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Textarea } from 'primeng/textarea';
 import { ConfirmDialog } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-group-form',
@@ -30,8 +31,9 @@ import { ConfirmationService } from 'primeng/api';
     Textarea,
     NgClass,
     ConfirmDialog,
+    Toast,
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './group-form.html',
 })
 export class GroupForm implements OnInit {
@@ -48,6 +50,7 @@ export class GroupForm implements OnInit {
   private readonly excelService = inject(ExcelService);
   private readonly appService = inject(AppService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly messageService = inject(MessageService);
 
   ngOnInit(): void {
     void this.parseFile();
@@ -164,5 +167,21 @@ export class GroupForm implements OnInit {
     this.view.push(newRow);
     this.selectedRow = newRow;
     tableRowSelect.updateModel(newRow);
+  }
+
+  async copyRowToClipboard(): Promise<void> {
+    const row = this.tableHeaderOptions()
+      .map((header) => {
+        return this.selectedRow![header.value];
+      })
+      .join('\t');
+
+    await navigator.clipboard.writeText(row);
+
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Selected row has been copied',
+    });
   }
 }

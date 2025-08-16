@@ -52,15 +52,23 @@
       </p-floatlabel>
     }
 
-    <div class="flex flex-row justify-center">
+    <div class="flex flex-row justify-center gap-2">
       <p-button
         label="Save file"
-        icon="pi pi-save"
+        icon="pi pi-download"
         outlined
         (onClick)="saveFile($event)"
+      />
+
+      <p-button
+        label="Copy row"
+        icon="pi pi-save"
+        outlined
+        (onClick)="copyRowToClipboard()"
       />
     </div>
   </div>
 }
 
 <p-confirm-dialog />
+<p-toast />
