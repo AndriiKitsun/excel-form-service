@@ -172,7 +172,13 @@ export class GroupForm implements OnInit {
   async copyRowToClipboard(): Promise<void> {
     const row = this.tableHeaderOptions()
       .map((header) => {
-        return this.selectedRow![header.value];
+        const value = this.selectedRow![header.value];
+
+        if (typeof value === 'string') {
+          return value.replace(/(\r\n|\n|\r)/gm, '');
+        }
+
+        return value;
       })
       .join('\t');
 
