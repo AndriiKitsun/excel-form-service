@@ -18,6 +18,8 @@ import { Textarea } from 'primeng/textarea';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
+import { Title } from '@angular/platform-browser';
+import { DEFAULT_APP_NAME } from '../../constants/app.constants';
 
 @Component({
   selector: 'app-group-form',
@@ -51,6 +53,7 @@ export class GroupForm implements OnInit {
   private readonly appService = inject(AppService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
+  private readonly titleService = inject(Title);
 
   ngOnInit(): void {
     void this.parseFile();
@@ -143,19 +146,24 @@ export class GroupForm implements OnInit {
   }
 
   selectRow(event: SelectChangeTypedEvent<SheetJsonViewWithAHeader>): void {
-    const rowValue = event.value;
+    const row = event.value;
 
-    if (!rowValue) {
+    if (!row) {
       return;
     }
 
     const selectedRow = this.view.find(
-      (row) => row.__rowNum__ === rowValue.__rowNum__,
+      (viewRow) => viewRow.__rowNum__ === row.__rowNum__,
     );
+    const selectedValue = selectedRow?.[this.selectedColumnId()]?.toString();
 
-    if (selectedRow) {
-      this.selectedRow = selectedRow;
+    if (!selectedRow) {
+      return;
     }
+
+    this.selectedRow = selectedRow;
+
+    this.titleService.setTitle(selectedValue ?? DEFAULT_APP_NAME);
   }
 
   addNewRow(tableRowSelect: Select): void {
